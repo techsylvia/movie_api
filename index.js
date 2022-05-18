@@ -3,29 +3,52 @@ const app = express();
 
 let topBooks = [
   {
-    title: "Harry Potter and the Sorcerer's Stone",
-    author: "J.K. Rowling",
+    title: "Intrusion",
+    director: "Adam Salky",
   },
   {
-    title: "Lord of the Rings",
-    author: "J.R.R. Tolkien",
+    title: "The little things",
+    director: "John Lee Hancock",
   },
   {
-    title: "Twilight",
-    author: "Stephanie Meyer",
+    title: "The Voyeurs",
+    director: "Michael Mohan",
+  },
+  {
+    title: "Hypnotic",
+    director: "Matt Angel",
+  },
+  {
+    title: "Things heard & seen",
+    director: "Shari Springer Berman and Robert Pulcini",
+  },
+  {
+    title: "The guilty",
+    director: "Antoine Fuqua",
+  },
+  {
+    title: "The father",
+    director: "Florian Zeller",
+  },
+  {
+    title: "The power of the dog",
+    director: "Jane Campion",
+  },
+  {
+    title: "The Beguiled",
+    director: "Sofia Coppola",
+  },
+  {
+    title: "I see you",
+    director: "Adam Randall",
   },
 ];
-
-let bobby = {
-  name: "bobby",
-  age: 32,
-};
 
 // GET requests
 app.get("/", (req, res) => {
   console.log(req);
 
-  res.send("Welcome to my book club!");
+  res.send("The top thriller movies!");
 });
 
 app.get("/documentation", (req, res) => {
@@ -33,11 +56,7 @@ app.get("/documentation", (req, res) => {
 });
 
 app.get("/books", (req, res) => {
-  res.json(topBooks);
-});
-
-app.get("/bobby", (req, res) => {
-  res.json(bobby);
+  res.json(topMovies);
 });
 
 // listen for requests
