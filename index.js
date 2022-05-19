@@ -1,7 +1,26 @@
+// Framework
 const express = require("express");
-const app = express();
+// Library
+const morgan = require("morgan");
 
-let topBooks = [
+const app = express(); // variable
+
+const myErrorHandler = (err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something broke!");
+};
+
+app.use(myErrorHandler);
+// const myLogger = (req, res, next) => {
+//   console.log(req.url);
+//   next();
+// };
+// app.use(myLogger);
+
+app.use(morgan("common"));
+app.use(express.static("public"));
+
+let topMovies = [
   {
     title: "Intrusion",
     director: "Adam Salky",
@@ -44,18 +63,19 @@ let topBooks = [
   },
 ];
 
-// GET requests
+// GET requests // creating Routes
 app.get("/", (req, res) => {
-  console.log(req);
-
+  console.log(req.url);
   res.send("The top thriller movies!");
 });
 
 app.get("/documentation", (req, res) => {
-  res.sendFile("public/documentation.html", { root: __dirname });
+  console.log(req.url);
+  res.sendFile("public/documentation.html", { root: __dirname }); // absolute path
 });
 
-app.get("/books", (req, res) => {
+app.get("/movies", (req, res) => {
+  console.log(req.url);
   res.json(topMovies);
 });
 
