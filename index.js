@@ -17,7 +17,7 @@ app.use(myErrorHandler);
 // };
 // app.use(myLogger);
 
-app.use(morgan("common"));
+app.use(morgan("common")); // logging middleware
 app.use(express.static("public"));
 
 let topMovies = [
@@ -64,7 +64,27 @@ let topMovies = [
 ];
 
 // GET requests // creating Routes
-app.get("/", (req, res) => {
+app.get("/students", (req, res) => {
+  console.log(req.url);
+  res.send("The top thriller movies!");
+});
+
+app.get("/student", (req, res) => {
+  console.log(req.url);
+  res.send("The top thriller movies!");
+});
+
+app.post("/transaction", (req, res) => {
+  console.log(req.url);
+  res.send("The top thriller movies!");
+});
+
+app.put("/student", (req, res) => {
+  console.log(req.url);
+  res.send("The top thriller movies!");
+});
+
+app.delete("/student", (req, res) => {
   console.log(req.url);
   res.send("The top thriller movies!");
 });
