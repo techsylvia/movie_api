@@ -1,105 +1,74 @@
-// Framework
-const express = require("express");
-// Library
-const morgan = require("morgan");
+const express = require("express"),
+  bodyParser = require("body-parser"),
+  uuid = require("uuid");
 
-const app = express(); // variable
+const app = express();
+app.use(bodyParser.json());
 
-const myErrorHandler = (err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send("Something broke!");
-};
+let favoriteMoviesUser1 = ["scary movie", "Blade"];
 
-app.use(myErrorHandler);
-// const myLogger = (req, res, next) => {
-//   console.log(req.url);
-//   next();
-// };
-// app.use(myLogger);
-
-app.use(morgan("common")); // logging middleware
-app.use(express.static("public"));
-
-let topMovies = [
+let users = [
   {
-    title: "Intrusion",
-    director: "Adam Salky",
+    id: 1,
+    username: "Jessica Drake",
+    favourite: [],
   },
   {
-    title: "The little things",
-    director: "John Lee Hancock",
+    id: 2,
+    username: "Ben Cohen",
+    favourite: [],
   },
   {
-    title: "The Voyeurs",
-    director: "Michael Mohan",
-  },
-  {
-    title: "Hypnotic",
-    director: "Matt Angel",
-  },
-  {
-    title: "Things heard & seen",
-    director: "Shari Springer Berman and Robert Pulcini",
-  },
-  {
-    title: "The guilty",
-    director: "Antoine Fuqua",
-  },
-  {
-    title: "The father",
-    director: "Florian Zeller",
-  },
-  {
-    title: "The power of the dog",
-    director: "Jane Campion",
-  },
-  {
-    title: "The Beguiled",
-    director: "Sofia Coppola",
-  },
-  {
-    title: "I see you",
-    director: "Adam Randall",
+    id: 3,
+    username: "Lisa Downing",
+    favourite: [],
   },
 ];
 
-// GET requests // creating Routes
-app.get("/students", (req, res) => {
-  console.log(req.url);
-  res.send("The top thriller movies!");
+app.get("/users/:name", (req, res) => {
+  res.json(
+    users.find((user) => {
+      return user.username === req.params.name;
+    })
+  );
 });
 
-app.get("/student", (req, res) => {
-  console.log(req.url);
-  res.send("The top thriller movies!");
+app.get("/users", (req, res) => {
+  res.json(users);
 });
 
-app.post("/transaction", (req, res) => {
-  console.log(req.url);
-  res.send("The top thriller movies!");
+app.post("/users", (req, res) => {
+  let newUser = req.body;
+  console.log(newUser);
+
+  if (!newUser.username) {
+    const message = "Missing name in request body";
+    res.status(400).send(message); // message is string cannot use json
+  } else {
+    newUser.id = uuid.v4();
+    users.push(newUser);
+    res.status(201).json(newUser); // object can use json
+  }
 });
 
-app.put("/student", (req, res) => {
-  console.log(req.url);
-  res.send("The top thriller movies!");
+app.patch("/user/:id", (req, res) => {
+  const userid = req.params.id;
+  if (!userid) {
+    res.status(400).send("user Id missing");
+  }
+  let updateuser = req.body;
+  if (!updateuser.username) {
+    const message = "Updated username missing";
+    res.status(400).send(message);
+  }
+
+  for (let i = 0; i <= users.length; i++) {
+    if (users[i].id === userid) {
+      users[i].username = updateuser.username;
+    }
+  }
 });
 
-app.delete("/student", (req, res) => {
-  console.log(req.url);
-  res.send("The top thriller movies!");
-});
-
-app.get("/documentation", (req, res) => {
-  console.log(req.url);
-  res.sendFile("public/documentation.html", { root: __dirname }); // absolute path
-});
-
-app.get("/movies", (req, res) => {
-  console.log(req.url);
-  res.json(topMovies);
-});
-
-// listen for requests
 app.listen(8080, () => {
-  console.log("Your app is listening on port 8080.");
+  console.log("Your app is listening in port 8080");
 });
