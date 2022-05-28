@@ -11,17 +11,17 @@ let users = [
   {
     id: 1,
     username: "Jessica Drake",
-    favourite: [],
+    favoriteMovies: ["Basketball Diaries"],
   },
   {
     id: 2,
     username: "Ben Cohen",
-    favourite: [],
+    favoriteMovies: ["Forrest Gump"],
   },
   {
     id: 3,
     username: "Lisa Downing",
-    favourite: [],
+    favoriteMovies: ["Die Hard"],
   },
 ];
 
@@ -42,7 +42,7 @@ app.post("/users", (req, res) => {
   console.log(newUser);
 
   if (!newUser.username) {
-    const message = "Missing name in request body";
+    const message = "Missing username in request body";
     res.status(400).send(message); // message is string cannot use json
   } else {
     newUser.id = uuid.v4();
@@ -62,11 +62,13 @@ app.patch("/user/:id", (req, res) => {
     res.status(400).send(message);
   }
 
-  for (let i = 0; i <= users.length; i++) {
+  for (let i = 0; i < users.length; i++) {
     if (users[i].id === userid) {
       users[i].username = updateuser.username;
     }
   }
+  const message = "success";
+  res.status(200).send(message);
 });
 
 app.listen(8080, () => {
