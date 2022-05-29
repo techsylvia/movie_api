@@ -1,11 +1,16 @@
 const express = require("express"),
   bodyParser = require("body-parser"),
   uuid = require("uuid");
+const res = require("express/lib/response");
 
 const app = express();
 app.use(bodyParser.json());
 
-let favoriteMoviesUser1 = ["scary movie", "Blade"];
+// Log data
+app.use(morgan("common"));
+
+// Sends static files to log.txt
+app.use(express.static("public"));
 
 let users = [
   {
@@ -25,6 +30,168 @@ let users = [
   },
 ];
 
+let movies = [
+  {
+    title: "Predator",
+    description: "The hunt is on!",
+    director: {
+      name: "John McTiernan",
+      bio: "Directed by favorite childhood movie",
+    },
+    genre: {
+      name: "Action",
+      description: "Guns a blazin",
+    },
+    img: "",
+  },
+  {
+    title: "Intrusion",
+    description: "The quietest towns hide the darkest secrets",
+    director: {
+      name: "Adam Salky",
+      bio: "",
+    },
+    genre: {
+      name: "Thriller",
+      description: "Full of suspense",
+    },
+    img: "",
+  },
+  {
+    title: "The Little Things",
+    description: "These guys cannot be stopped!",
+    director: {
+      name: "	John Lee Hancock",
+      bio: "",
+    },
+    genre: {
+      name: "Thriller",
+      description:
+        "Deputy Sheriff Joe “Deke” Deacon (Washington) is on a search for a serial killer with Sergeant Jim Baxter (Malik), who is unaware that the investigation is dredging up Deke’s past.",
+    },
+    img: "",
+  },
+  {
+    title: "Die Hard",
+    description: "He just doesn't die!",
+    director: {
+      name: "John McTiernan",
+      bio: "He directed Die Hard.",
+    },
+    genre: {
+      name: "Action",
+      description: "Guns a blazin",
+    },
+    img: "",
+  },
+  {
+    title: "The Voyeurs",
+    description:
+      "A young couple (Sydney Sweeney and Justice Smith), find themselves becoming interested in the sex life of their neighbors across the street (Ben Hardy and Natasha Liu Bordizzo).",
+    director: {
+      name: "Michael Mohan",
+      bio: "",
+    },
+    genre: {
+      name: "Thriller",
+      description: "",
+    },
+    img: "",
+  },
+  {
+    title: "The Burbs",
+    description: "You cannot trust your neighbors!",
+    director: {
+      name: "Joe Dante",
+      bio: "He directed Tom Hanks before he was Tom Hanks.",
+    },
+    genre: {
+      name: "Comedy",
+      description: "Its funny!",
+    },
+    img: "",
+  },
+  {
+    title: "The Beguiled",
+    description:
+      "Is an atmospheric thriller from acclaimed writer/director Sofia Coppola, winner of the Best Director award at the 2017 Cannes International Film Festival.",
+    director: {
+      name: "Sofia Coppola",
+      bio: "",
+    },
+    genre: {
+      name: "Drama",
+      description: "",
+    },
+    img: "",
+  },
+
+  {
+    title: "The Guilty",
+    description:
+      "A troubled police detective assigned to 911 operator duty scrambles to save a distressed caller during a harrowing day of revelations — and reckonings.",
+    director: {
+      name: "Antoine Fuqua",
+      bio: "",
+    },
+    genre: {
+      name: "Crime",
+      description: "",
+    },
+    img: "",
+  },
+  {
+    title: "The Father",
+    description:
+      "THE FATHER stars Anthony Hopkins who plays a mischievous and highly independent man who, as he ages, refuses all assistance from his daughter.. As he tries to make sense of his changing circumstances, he begins to doubt his loved ones, his own mind and even the fabric of his reality.",
+    director: {
+      name: "Florian Zeller",
+      bio: "",
+    },
+    genre: {
+      name: "Suspense",
+      description: "",
+    },
+    img: "",
+  },
+  {
+    title: "The Power of the Dog",
+    description:
+      "A domineering but charismatic rancher wages a war of intimidation on his brother's new wife and her teen son — until long-hidden secrets come to light.",
+    director: {
+      name: "Jane Campion",
+      bio: "",
+    },
+    genre: {
+      name: "Dramas",
+      description: "",
+    },
+    img: "",
+  },
+];
+
+// Send to doc in public folder
+app.get("/documentation.html", (req, res) => {
+  res.sendFile("public/documentation.html", { root: __dirname });
+});
+
+//List of Movies
+app.get("/movies", (req, res) => {
+  res.status(200).json(movies);
+});
+
+//Read Movie by Title
+app.get("/movies/:title", (req, res) => {
+  const { title } = req.params;
+  const movie = movies.find((movie) => movie.title === title);
+
+  if (movie) {
+    res.status(200).json(movie);
+  } else {
+    res.status(400).send("movie does not exist");
+  }
+});
+
 app.get("/users/:name", (req, res) => {
   res.json(
     users.find((user) => {
@@ -37,6 +204,7 @@ app.get("/users", (req, res) => {
   res.json(users);
 });
 
+// Create user and id
 app.post("/users", (req, res) => {
   let newUser = req.body;
   console.log(newUser);
@@ -51,6 +219,7 @@ app.post("/users", (req, res) => {
   }
 });
 
+// Update username
 app.patch("/user/:id", (req, res) => {
   const userid = req.params.id;
   if (!userid) {
@@ -72,6 +241,7 @@ app.patch("/user/:id", (req, res) => {
   res.status(404).send(`${userid} not found`);
 });
 
+// Listen for requests
 app.listen(8080, () => {
   console.log("Your app is listening in port 8080");
 });
