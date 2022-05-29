@@ -9,17 +9,17 @@ let favoriteMoviesUser1 = ["scary movie", "Blade"];
 
 let users = [
   {
-    id: 1,
+    id: "1",
     username: "Jessica Drake",
     favoriteMovies: ["Basketball Diaries"],
   },
   {
-    id: 2,
+    id: "2",
     username: "Ben Cohen",
     favoriteMovies: ["Forrest Gump"],
   },
   {
-    id: 3,
+    id: "3",
     username: "Lisa Downing",
     favoriteMovies: ["Die Hard"],
   },
@@ -65,10 +65,11 @@ app.patch("/user/:id", (req, res) => {
   for (let i = 0; i < users.length; i++) {
     if (users[i].id === userid) {
       users[i].username = updateuser.username;
+      return res.status(200).send("success");
     }
   }
-  const message = "success";
-  res.status(200).send(message);
+
+  res.status(404).send(`${userid} not found`);
 });
 
 app.listen(8080, () => {
