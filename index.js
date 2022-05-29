@@ -204,6 +204,20 @@ app.get("/movies/:genreName", (req, res) => {
   }
 });
 
+//Read Directors Name
+app.get("/movies/directors/:directorName", (req, res) => {
+  const { directorName } = req.params;
+  const director = movies.find(
+    (movie) => movie.director.name === directorName
+  ).director;
+
+  if (director) {
+    res.status(200).json(director);
+  } else {
+    res.status(400).send("no director found");
+  }
+});
+
 app.get("/users/:name", (req, res) => {
   res.json(
     users.find((user) => {
