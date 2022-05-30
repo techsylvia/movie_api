@@ -224,6 +224,25 @@ app.patch("/user/:id", (req, res) => {
   res.status(404).send(`${userid} not found`);
 });
 
+// Delete user Id
+app.delete("/users/:id", (req, res) => {
+  const { id } = req.params;
+
+  let user = users.find((user) => user.id == id);
+
+  if (user) {
+    users = users.filter((user) => user.id != id);
+    res.status(200).send(`user ${id} has been deleted`);
+  } else {
+    res.status(400).send("user has not been deleted");
+  }
+});
+
+// Error handling
+app.use((err, req, res, next) => {
+  res.status(500).send("Something broke!");
+});
+
 // List of Movies
 app.get("/movies", (req, res) => {
   res.status(200).json(movies);
@@ -296,7 +315,7 @@ app.delete("/users/:id/:movieTitle", (req, res) => {
     );
     res
       .status(200)
-      .send(`${movietitle} has been removed from users ${id}'s favorites`);
+      .send(`${movieTitle} has been removed from users ${id}'s favorites`);
   } else {
     res.status(400).send("did not remove");
   }
