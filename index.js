@@ -1,6 +1,7 @@
 const express = require("express"),
   bodyParser = require("body-parser"),
-  uuid = require("uuid");
+  uuid = require("uuid"),
+  morgan = require("morgan");
 
 const app = express();
 app.use(bodyParser.json());
