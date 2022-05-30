@@ -29,81 +29,144 @@
             The endpoint URL
           </th>
           <th>The method type</th>
-          <th>The format of data</th>
           <th>The query parameters</th>
+          <th>The format of data</th>
           <th>The format of the response data</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>GET http://localhost:8080/users/</td>
-          <td>query params: None</td>
-          <td>body: None</td>
-          <td></td>
-          <td>
+          <td>Return a list of movies to the user</td>
+          <td>/movies</td>
+          <td>Get</td>
+          <td>none</td>
+          <td>A JSON object holding data about all the movies</td>
+        </tr>
+        <tr>
+          <td>Return data about a single movie by title to the user</td>
+          <td>/movies/[name]</td>
+          <td>Get</td>
+          <td>none</td>
+          <td>A JSON object holding data, containing title, img url, genre, description and director of a single movie
+            by title to the user
             <pre>
-            <code>
-              {
-              "id": 1,
-              "username": "Jessica Drake",
-              "favourite": []
-              },
-              {
-              "id": 2,
-              "username": "Ben Cohen",
-              "favourite": []
-              },
-              {
-              "id": 3,
-              "username": "Lisa Downing",
-              "favourite": []
-              }
-              </code>
-          </pre>
+                            <code>
+                                {
+                                title: '',
+                                description: '',
+                                director: '',
+                                genre: '',
+                                img: ''
+                                }
+                            </code>
+                        </pre>
           </td>
         </tr>
         <tr>
-          <td>POST http://localhost:8080/users/</td>
-          <td> query parms: None</td>
-          <td> body: {
-            "username": "sylvia"
-            }</td>
-          <td></td>
-          <td>
+          <td>Allow new users to register</td>
+          <td>/users</td>
+          <td>Post</td>
+          <td>A JSON object holding data about the users to add, structured like:
             <pre>
-            <code>{
-              "username": "Lisa Downing",
-              "id": "828c491c-266c-4ed5-88a8-ff7a1f935975"
-              }</code>
-          </pre>
+                            <code>
+                                {
+                                name: '',
+                                favoriteMovies: []
+                                }
+                            </code>
+                        </pre>
           </td>
+          <td>A JSON object holding data about the users added, inluding an ID:
+            <pre>
+                            <code>
+                                {
+                                id: '',
+                                name: '',
+                                favoriteMovies: []
+                                }
+                            </code>
+                        </pre>
+          </td>
+        </tr>
 
-        </tr>
         <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>Allow users to update their user info</td>
+          <td>/users/[id]</td>
+          <td>Put</td>
+          <td>none</td>
           <td>
             <pre>
-            <code></code>
-          </pre>
+                            <code>
+                                {
+                                id: '',
+                                name: ''
+                            </code>
+                        </pre>
+          </td>
+        </tr>
+
+        <tr>
+          <td>Allow exisiting users to get deleted</td>
+          <td>/users/[id]</td>
+          <td>Delete</td>
+          <td>none</td>
+          <td>A text message indicating whether the user was successfully deleted</td>
+        </tr>
+
+        <tr>
+          <td>Return data about a genre by name</td>
+          <td>/movies/genre/[genreName]</td>
+          <td>Get</td>
+          <td>none</td>
+          <td>A JSON object holding data about the genre:
+            <pre>
+                            <code>
+                                {
+                                name: '',
+                                description: ''
+                                }
+                            </code>
+                        </pre>
           </td>
         </tr>
         <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td>
+          <td>Return data about a director</td>
+          <td>/movies/directors/[directorsName]</td>
+          <td>Get</td>
+          <td>none</td>
+          <td>A JSON object holding data about the director:
             <pre>
-            <code></code>
-          </pre>
+                            <code>
+                                {
+                                name: '',
+                                bio: ''
+                                }
+                            </code>
+                        </pre>
           </td>
         </tr>
+
+
+        <tr>
+          <td>Allow users to add a movie to list of favorites</td>
+          <td>/users/[id]/[movieName]</td>
+          <td>Post</td>
+          <td>none</td>
+          <td>A text showing that a movie has been added to favorites</td>
+        </tr>
+        <tr>
+          <td>Allow users to remove a movie from list of favorites</td>
+          <td>/users/[id]/[movieName]</td>
+          <td>Delete</td>
+          <td>none</td>
+          <td>A text message showing that a movie has been removed from favorites</td>
+        </tr>
+
       </tbody>
     </table>
   </div>
+
+
 </body>
 
 </html>
