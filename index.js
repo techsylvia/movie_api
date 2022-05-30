@@ -238,11 +238,6 @@ app.delete("/users/:id", (req, res) => {
   }
 });
 
-// Error handling
-app.use((err, req, res, next) => {
-  res.status(500).send("Something broke!");
-});
-
 // List of Movies
 app.get("/movies", (req, res) => {
   res.status(200).json(movies);
@@ -319,6 +314,11 @@ app.delete("/users/:id/:movieTitle", (req, res) => {
   } else {
     res.status(400).send("did not remove");
   }
+});
+
+// Error handling
+app.use((err, req, res, next) => {
+  res.status(500).send("Something broke!");
 });
 
 // Listen for requests
