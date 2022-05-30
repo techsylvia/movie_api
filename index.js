@@ -1,7 +1,6 @@
 const express = require("express"),
   bodyParser = require("body-parser"),
   uuid = require("uuid");
-const res = require("express/lib/response");
 
 const app = express();
 app.use(bodyParser.json());
