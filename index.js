@@ -175,49 +175,7 @@ app.get("/documentation.html", (req, res) => {
   res.sendFile("public/documentation.html", { root: __dirname });
 });
 
-//List of Movies
-app.get("/movies", (req, res) => {
-  res.status(200).json(movies);
-});
-
-//Read Movie by Title
-app.get("/movies/:title", (req, res) => {
-  const { title } = req.params;
-  const movie = movies.find((movie) => movie.title === title);
-
-  if (movie) {
-    res.status(200).json(movie);
-  } else {
-    res.status(400).send("movie does not exist");
-  }
-});
-
-//Read Movie by Genre Name
-app.get("/movies/:genreName", (req, res) => {
-  const { genreName } = req.params;
-  const genre = movies.find((movie) => movie.genre.name === genreName).genre;
-
-  if (genre) {
-    res.status(200).json(genre);
-  } else {
-    res.status(400).send("no type of this genre");
-  }
-});
-
-//Read Directors Name
-app.get("/movies/directors/:directorName", (req, res) => {
-  const { directorName } = req.params;
-  const director = movies.find(
-    (movie) => movie.director.name === directorName
-  ).director;
-
-  if (director) {
-    res.status(200).json(director);
-  } else {
-    res.status(400).send("no director found");
-  }
-});
-
+// Get Users Name
 app.get("/users/:name", (req, res) => {
   res.json(
     users.find((user) => {
@@ -233,7 +191,6 @@ app.get("/users", (req, res) => {
 // Create user and id
 app.post("/users", (req, res) => {
   let newUser = req.body;
-  console.log(newUser);
 
   if (!newUser.username) {
     const message = "Missing username in request body";
@@ -245,7 +202,7 @@ app.post("/users", (req, res) => {
   }
 });
 
-// Update username
+// Update username Id
 app.patch("/user/:id", (req, res) => {
   const userid = req.params.id;
   if (!userid) {
@@ -265,6 +222,84 @@ app.patch("/user/:id", (req, res) => {
   }
 
   res.status(404).send(`${userid} not found`);
+});
+
+// List of Movies
+app.get("/movies", (req, res) => {
+  res.status(200).json(movies);
+});
+
+// Read Movie by Title
+app.get("/movies/:title", (req, res) => {
+  const { title } = req.params;
+  const movie = movies.find((movie) => movie.title === title);
+
+  if (movie) {
+    res.status(200).json(movie);
+  } else {
+    res.status(400).send("movie does not exist");
+  }
+});
+
+// Read Movie by Genre Name
+app.get("/movies/:genreName", (req, res) => {
+  const { genreName } = req.params;
+  const genre = movies.find((movie) => movie.genre.name === genreName).genre;
+
+  if (genre) {
+    res.status(200).json(genre);
+  } else {
+    res.status(400).send("no type of this genre");
+  }
+});
+
+// Read Directors Name
+app.get("/movies/directors/:directorName", (req, res) => {
+  const { directorName } = req.params;
+  const director = movies.find(
+    (movie) => movie.director.name === directorName
+  ).director;
+
+  if (director) {
+    res.status(200).json(director);
+  } else {
+    res.status(400).send("no director found");
+  }
+});
+
+// Create add Movie to Fav
+
+app.post("/users/:id/:movieTitle", (req, res) => {
+  const { id, movieTitle } = req.params;
+  let user = users.find((user) => user.id == id);
+
+  if (user) {
+    user.favoriteMovies.push(movieTitle);
+    res
+      .status(200)
+      .send(`${movieTtitle} has been added to user ${id}'s favorites`);
+  } else {
+    res.status(400).send("did not add to favorites");
+  }
+});
+
+// Delete movie from fav movies
+app.delete("/users/:id/:movieTitle", (req, res) => {
+  const { id, movieTitle } = req.params;
+
+  //Checking if user exists
+  let user = users.find((user) => user.id == id);
+
+  if (user) {
+    user.favoriteMovies = user.favoriteMovies.filter(
+      (title) => title !== movieTitle
+    );
+    res
+      .status(200)
+      .send(`${movietitle} has been removed from users ${id}'s favorites`);
+  } else {
+    res.status(400).send("did not remove");
+  }
 });
 
 // Listen for requests
