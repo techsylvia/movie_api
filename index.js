@@ -175,7 +175,7 @@ app.get("/documentation.html", (req, res) => {
   res.sendFile("public/documentation.html", { root: __dirname });
 });
 
-// Get Users Name
+// Get Users Name.
 app.get("/users/:name", (req, res) => {
   res.json(
     users.find((user) => {
@@ -188,7 +188,7 @@ app.get("/users", (req, res) => {
   res.json(users);
 });
 
-// Create user and id
+// Create user and id.
 app.post("/users", (req, res) => {
   let newUser = req.body;
 
@@ -291,7 +291,7 @@ app.post("/users/:id/:movieTitle", (req, res) => {
     user.favoriteMovies.push(movieTitle);
     res
       .status(200)
-      .send(`${movieTtitle} has been added to user ${id}'s favorites`);
+      .send(`${movieTitle} has been added to user ${id}'s favorites`);
   } else {
     res.status(400).send("did not add to favorites");
   }
