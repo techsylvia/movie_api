@@ -89,7 +89,7 @@ app.put("/students/:name/:class/:grade", (req, res) => {
   }
 });
 
-app.get("Students/:name/gpa", (req, res) => {
+app.get("students/:name/gpa", (req, res) => {
   let student = students.find((student) => {
     return student.name === req.params.name;
   });
@@ -116,7 +116,7 @@ app.listen(8080, () => {
   console.log("Your app is listening in port 8080");
 });
 
-app.get("/Students", (req, res) => {
+app.get("/students", (req, res) => {
   res.json(students);
 });
 
