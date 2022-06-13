@@ -61,7 +61,7 @@ let movies = [
     title: "The Little Things",
     description: "These guys cannot be stopped!",
     director: {
-      name: "	John Lee Hancock",
+      name: "John Lee Hancock",
       bio: "",
     },
     genre: {
@@ -132,11 +132,12 @@ let movies = [
       "A troubled police detective assigned to 911 operator duty scrambles to save a distressed caller during a harrowing day of revelations — and reckonings.",
     director: {
       name: "Antoine Fuqua",
-      bio: "",
+      bio: "Is an American film director, producer and actor. He was originally known for directing music videos.",
     },
     genre: {
       name: "Crime",
-      description: "",
+      description:
+        "Is a genre that revolves around the action of a criminal mastermind",
     },
     img: "",
   },
@@ -163,8 +164,9 @@ let movies = [
       bio: "",
     },
     genre: {
-      name: "Dramas",
-      description: "",
+      name: "Drama",
+      description:
+        "In film and television, drama is a category or genre of narrative fiction (or semi-fiction) intended to be more serious than humorous in tone.",
     },
     img: "",
   },
