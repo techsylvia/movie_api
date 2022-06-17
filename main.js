@@ -6,6 +6,10 @@ const express = require("express"),
 const app = express();
 app.use(bodyParser.json());
 
+let movieCollection = [
+  { id: "62a71c1f9b2a6a14b6d6aa2b", titel: "The Power of the Dog" },
+];
+
 app.get("/users", async (req, res) => {
   const users = await userCollection.find();
   res.json(users);
