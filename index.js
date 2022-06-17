@@ -3,8 +3,15 @@ const express = require("express"),
   uuid = require("uuid"),
   morgan = require("morgan");
 
+const mongoose = require("mongoose");
+const Models = require("./models.js");
+
+const Movies = Models.Movie;
+const Users = Models.User;
+
 const app = express();
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Log data
 app.use(morgan("common"));
@@ -299,6 +306,34 @@ app.post("/users/:id/:movieTitle", (req, res) => {
   }
 });
 
+// Add a user
+app.post("/users", (req, res) => {
+  Users.findOne({ Username: req.body.Username })
+    .then((user) => {
+      if (user) {
+        return res.status(400).send(req.body.Username + "already exists");
+      } else {
+        Users.create({
+          Username: req.body.Username,
+          Password: req.body.Password,
+          Email: req.body.Email,
+          Birthday: req.body.Birthday,
+        })
+          .then((user) => {
+            res.status(201).json(user);
+          })
+          .catch((error) => {
+            console.error(error);
+            res.status(500).send("Error: " + error);
+          });
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send("Error: " + error);
+    });
+});
+
 // Delete movie from fav movies
 app.delete("/users/:id/:movieTitle", (req, res) => {
   const { id, movieTitle } = req.params;
@@ -327,4 +362,3 @@ app.use((err, req, res, next) => {
 app.listen(8080, () => {
   console.log("Your app is listening in port 8080");
 });
-mongoexport -d myFlixDB -c movies -o listMovies.json

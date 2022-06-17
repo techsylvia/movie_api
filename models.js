@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const { stringify } = require("uuid");
 
+mongoose.connect("mongodb://localhost:27017/myFlixDB");
+
 let movieSchema = mongoose.Schema({
   Title: { type: String, required: true },
   Description: { type: String, required: true },
