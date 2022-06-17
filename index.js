@@ -232,6 +232,29 @@ app.post(
   }
 );
 
+// Allows user to delete movie from favorites
+app.delete(
+  "/users/:Username/movies/:MovieID",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Users.findOneAndUpdate(
+      { Username: req.params.Username },
+      {
+        $pull: { FavoriteMovies: req.params.MovieID },
+      },
+      { new: true },
+      (err, updatedUser) => {
+        if (err) {
+          console.error(err);
+          res.status(500).send("Error: " + err);
+        } else {
+          res.json(updatedUser);
+        }
+      }
+    );
+  }
+);
+
 // Send to doc in public folder
 app.get("/documentation.html", (req, res) => {
   res.sendFile("public/documentation.html", { root: __dirname });
