@@ -72,7 +72,7 @@ app.get("/director/:name", async (req, res) => {
 
 //new users to register
 
-app.post("/user", async (req, res) => {
+app.post("/users", async (req, res) => {
   const newUser = req.body;
   if (!newUser) {
     res.status(400);
@@ -86,11 +86,10 @@ app.post("/user", async (req, res) => {
   res.json(user);
 });
 
-
 // Get user by username
 
 app.get("/user/:username", async (req, res) => {
-  const username = req.body.username;
+  const username = req.params.username;
   if (!username) {
     res.status(404);
     return;
@@ -104,23 +103,72 @@ app.get("/user/:username", async (req, res) => {
 });
 
 // Allow users to update their user info (username, password, email, date of birth)
+app.put("/user/:id", async (req, res) => {
+  const userId = req.params.id;
+  const userData = req.body;
+  const user = await userCollection.findById(userId);
+  if (!user) {
+    res.status(404);
+    return;
+  }
 
+  user.Username = userData.username;
+  user.Password = userData.password;
+  user.Email = userData.email;
+  user.Birthday = userData.birthdate;
+
+  await user.save();
+  res.status(200);
+});
 // Add a movie to a user's list of favorites
 
-app.post("/user/:id/:movieTitle", (req, res) => {
-  const req.body.username;
-  let user = user.find((user) => user.id == id);
+app.post("/user/:id/:movietitle", async (req, res) => {
+  const movieTitle = req.params.movietitle;
+  const userId = req.params.id;
 
-  if (user) {
-    user.favoriteMovies.push(movieTitle);
-    res
-      .status(200)
-      .send(`${movieTitle} has been added to user ${id}'s favorites`);
-  } else {
-    res.status(400).send("did not add to favorites");
+  const user = await userCollection.findById(userId);
+  if (!user) {
+    res.status(404);
+    return;
   }
+
+  const movie = await movieCollection.find({ Title: movieTitle });
+  if (!movie) {
+    res.status(404).send("Movie title does not exist");
+  }
+
+  user.FavoriteMovies.push(movie._id);
+  await user.save();
+
+  res.status(200);
 });
 
 // Allow users to remove a movie from their list of favorites
 
+app.delete("/user/:id/:movieid", async (req, res) => {
+  const userId = req.params.id;
+  const movieid = req.params.movieid;
+
+  const user = await userCollection.findById(userId);
+  if (!user) {
+    res.status(404);
+    return;
+  }
+  const index = user.FavoriteMovies.indexOf(movieid);
+  user.FavoriteMovies.splice(index, 1);
+
+  await user.save();
+  res.status(200);
+});
+
 // Allow existing users to deregister
+app.delete("/user/:id", async (req, res) => {
+  const userId = req.params.id;
+  if (!user) {
+    res.status(404);
+    return;
+  }
+
+  await userCollection.deleteOne({ _id: userId });
+  res.status(200);
+});
