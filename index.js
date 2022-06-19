@@ -37,7 +37,7 @@ let users = [
   },
 ];
 let movieCollection = [
-  { id: "62a71c1f9b2a6a14b6d6aa2b", titel: "The Power of the Dog" },
+  { id: "62a71c1f9b2a6a14b6d6aa2b", title: "The Power of the Dog" },
 ];
 
 let userCollection = [{ id: "3", username: "" }];
@@ -184,76 +184,7 @@ let movies = [
 ];
 
 // Update a user's info, by username
-// We’ll expect JSON in this format
-
-app.put("/users/:Username", (req, res) => {
-  Users.findOneAndUpdate(
-    { Username: req.params.Username },
-    {
-      $set: {
-        Username: req.body.Username,
-        Password: req.body.Password,
-        Email: req.body.Email,
-        Birthday: req.body.Birthday,
-      },
-    },
-    { new: true }, // This line makes sure that the updated document is returned
-    (err, updatedUser) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send("Error: " + err);
-      } else {
-        res.json(updatedUser);
-      }
-    }
-  );
-});
-
-// Add a movie to a user's list of favorites
-app.post(
-  "/users/:Username/movies/:MovieID",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Users.findOneAndUpdate(
-      { Username: req.params.Username },
-      {
-        $push: { FavoriteMovies: req.params.MovieID },
-      },
-      { new: true }, // This line makes sure that the updated document is returned
-      (err, updatedUser) => {
-        if (err) {
-          console.error(err);
-          res.status(500).send("Error: " + err);
-        } else {
-          res.json(updatedUser);
-        }
-      }
-    );
-  }
-);
-
-// Allows user to delete movie from favorites
-app.delete(
-  "/users/:Username/movies/:MovieID",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Users.findOneAndUpdate(
-      { Username: req.params.Username },
-      {
-        $pull: { FavoriteMovies: req.params.MovieID },
-      },
-      { new: true },
-      (err, updatedUser) => {
-        if (err) {
-          console.error(err);
-          res.status(500).send("Error: " + err);
-        } else {
-          res.json(updatedUser);
-        }
-      }
-    );
-  }
-);
+// We’ll expect JSON in this form
 
 // Send to doc in public folder
 app.get("/documentation.html", (req, res) => {
