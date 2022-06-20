@@ -13,6 +13,13 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+//auth
+let auth = require("./auth")(app);
+
+// passport file
+const passport = require("passport");
+require("./passport");
+
 // Log data
 app.use(morgan("common"));
 
