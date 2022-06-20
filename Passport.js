@@ -22,7 +22,7 @@ passport.use(
         }
 
         if (!user) {
-          console.log("incorrect username");
+          console.log("Incorrect username");
           return callback(null, false, {
             //If an error occurs, or if the username can’t be found within the database
             message: "Incorrect username or password.",

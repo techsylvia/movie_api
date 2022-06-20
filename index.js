@@ -1,378 +1,242 @@
-const express = require("express"),
-  bodyParser = require("body-parser"),
-  uuid = require("uuid"),
-  morgan = require("morgan");
-
-const mongoose = require("mongoose");
-const Models = require("./models.js");
-
-const Movies = Models.Movie;
-const Users = Models.User;
+const movieCollection = require("./models").Movie;
+const userCollection = require("./models").User;
+const express = require("express");
+bodyParser = require("body-parser");
 
 const app = express();
 app.use(bodyParser.json());
+
 app.use(bodyParser.urlencoded({ extended: true }));
-
 //auth
-let auth = require("./auth")(app);
-
+require("./auth")(app);
 // passport file
 const passport = require("passport");
-require("./passport");
 
-// Log data
-app.use(morgan("common"));
-
-// Sends static files to log.txt
-app.use(express.static("public"));
-
-let users = [
-  {
-    id: "1",
-    username: "Jessica Drake",
-    favoriteMovies: ["Basketball Diaries"],
-  },
-  {
-    id: "2",
-    username: "Ben Cohen",
-    favoriteMovies: ["Forrest Gump"],
-  },
-  {
-    id: "3",
-    username: "Lisa Downing",
-    favoriteMovies: ["Die Hard"],
-  },
-];
-let movieCollection = [
-  { id: "62a71c1f9b2a6a14b6d6aa2b", title: "The Power of the Dog" },
-];
-
-let userCollection = [{ id: "3", username: "" }];
-let movies = [
-  {
-    title: "Predator",
-    description: "The hunt is on!",
-    director: {
-      name: "John McTiernan",
-      bio: "Directed by favorite childhood movie",
-    },
-    genre: {
-      name: "Action",
-      description: "Guns a blazin",
-    },
-    img: "",
-  },
-  {
-    title: "Intrusion",
-    description: "The quietest towns hide the darkest secrets",
-    director: {
-      name: "Adam Salky",
-      bio: "",
-    },
-    genre: {
-      name: "Thriller",
-      description: "Full of suspense",
-    },
-    img: "",
-  },
-  {
-    title: "The Little Things",
-    description: "These guys cannot be stopped!",
-    director: {
-      name: "John Lee Hancock",
-      bio: "",
-    },
-    genre: {
-      name: "Thriller",
-      description:
-        "Deputy Sheriff Joe “Deke” Deacon (Washington) is on a search for a serial killer with Sergeant Jim Baxter (Malik), who is unaware that the investigation is dredging up Deke’s past.",
-    },
-    img: "",
-  },
-  {
-    title: "Die Hard",
-    description: "He just doesn't die!",
-    director: {
-      name: "John McTiernan",
-      bio: "He directed Die Hard.",
-    },
-    genre: {
-      name: "Action",
-      description: "Guns a blazin",
-    },
-    img: "",
-  },
-  {
-    title: "The Voyeurs",
-    description:
-      "A young couple (Sydney Sweeney and Justice Smith), find themselves becoming interested in the sex life of their neighbors across the street (Ben Hardy and Natasha Liu Bordizzo).",
-    director: {
-      name: "Michael Mohan",
-      bio: "",
-    },
-    genre: {
-      name: "Thriller",
-      description: "",
-    },
-    img: "",
-  },
-  {
-    title: "The Burbs",
-    description: "You cannot trust your neighbors!",
-    director: {
-      name: "Joe Dante",
-      bio: "He directed Tom Hanks before he was Tom Hanks.",
-    },
-    genre: {
-      name: "Comedy",
-      description: "Its funny!",
-    },
-    img: "",
-  },
-  {
-    title: "The Beguiled",
-    description:
-      "Is an atmospheric thriller from acclaimed writer/director Sofia Coppola, winner of the Best Director award at the 2017 Cannes International Film Festival.",
-    director: {
-      name: "Sofia Coppola",
-      bio: "",
-    },
-    genre: {
-      name: "Drama",
-      description: "",
-    },
-    img: "",
-  },
-
-  {
-    title: "The Guilty",
-    description:
-      "A troubled police detective assigned to 911 operator duty scrambles to save a distressed caller during a harrowing day of revelations — and reckonings.",
-    director: {
-      name: "Antoine Fuqua",
-      bio: "Is an American film director, producer and actor. He was originally known for directing music videos.",
-    },
-    genre: {
-      name: "Crime",
-      description:
-        "Is a genre that revolves around the action of a criminal mastermind",
-    },
-    img: "",
-  },
-  {
-    title: "The Father",
-    description:
-      "THE FATHER stars Anthony Hopkins who plays a mischievous and highly independent man who, as he ages, refuses all assistance from his daughter.. As he tries to make sense of his changing circumstances, he begins to doubt his loved ones, his own mind and even the fabric of his reality.",
-    director: {
-      name: "Florian Zeller",
-      bio: "",
-    },
-    genre: {
-      name: "Suspense",
-      description: "",
-    },
-    img: "",
-  },
-  {
-    title: "The Power of the Dog",
-    description:
-      "A domineering but charismatic rancher wages a war of intimidation on his brother's new wife and her teen son — until long-hidden secrets come to light.",
-    director: {
-      name: "Jane Campion",
-      bio: "",
-    },
-    genre: {
-      name: "Drama",
-      description:
-        "In film and television, drama is a category or genre of narrative fiction (or semi-fiction) intended to be more serious than humorous in tone.",
-    },
-    img: "",
-  },
-];
-
-// Update a user's info, by username
-// We’ll expect JSON in this form
-
-// Send to doc in public folder
-app.get("/documentation.html", (req, res) => {
-  res.sendFile("public/documentation.html", { root: __dirname });
-});
-
-// Get Users Name.
-app.get("/users/:name", (req, res) => {
-  res.json(
-    users.find((user) => {
-      return user.username === req.params.name;
-    })
-  );
-});
-
-app.get("/users", (req, res) => {
+app.get("/users", async (req, res) => {
+  const users = await userCollection.find();
   res.json(users);
 });
 
-// Create user and id.
-app.post("/users", (req, res) => {
-  let newUser = req.body;
+//Return a list of ALL movies to the user
 
-  if (!newUser.username) {
-    const message = "Missing username in request body";
-    res.status(400).send(message); // message is string cannot use json
-  } else {
-    newUser.id = uuid.v4();
-    users.push(newUser);
-    res.status(201).json(newUser); // object can use json
+app.get(
+  "/movies",
+  passport.authenticate("jwt", {
+    session: false,
+  }),
+  async (req, res) => {
+    const movies = await movieCollection.find();
+    res.json(movies);
   }
-});
+);
 
-// Update username Id
-app.patch("/user/:id", (req, res) => {
-  const userid = req.params.id;
-  if (!userid) {
-    res.status(400).send("user Id missing");
-  }
-  let updateuser = req.body;
-  if (!updateuser.username) {
-    const message = "Updated username missing";
-    res.status(400).send(message);
-  }
+//Return data about a genre (description) by name/title
 
-  for (let i = 0; i < users.length; i++) {
-    if (users[i].id === userid) {
-      users[i].username = updateuser.username;
-      return res.status(200).send("success");
+app.get(
+  "/genre/:name",
+  passport.authenticate("jwt", {
+    session: false,
+  }),
+  async (req, res) => {
+    const name = req.params.name;
+    if (!name) {
+      res.status(400).send();
+      return;
     }
+    const genre = await movieCollection.find({ "Genre.Name": name });
+    if (!genre) {
+      res.status(404).send();
+      return;
+    }
+    res.json({ genre: genre });
   }
+);
 
-  res.status(404).send(`${userid} not found`);
-});
+//Return a list of Movie by Title
 
-// Delete user Id
-app.delete("/users/:id", (req, res) => {
-  const { id } = req.params;
-
-  let user = users.find((user) => user.id == id);
-
-  if (user) {
-    users = users.filter((user) => user.id != id);
-    res.status(200).send(`user ${id} has been deleted`);
-  } else {
-    res.status(400).send("user has not been deleted");
+app.get(
+  "/movie/:title",
+  passport.authenticate("jwt", {
+    session: false,
+  }),
+  async (req, res) => {
+    const title = req.params.title;
+    if (!title) {
+      res.status(400).send();
+      return;
+    }
+    const movie = await movieCollection.find({ Title: title });
+    if (!movie) {
+      res.status(404).send();
+      return;
+    }
+    res.json(movie);
   }
-});
+);
 
-// List of Movies
-app.get("/movies", (req, res) => {
-  res.status(200).json(movies);
-});
+//Return data (description, genre, director, about a single movie by title to the user)
 
-// Read Movie by Title
-app.get("/movies/:title", (req, res) => {
-  const { title } = req.params;
-  const movie = movies.find((movie) => movie.title === title);
-
-  if (movie) {
-    res.status(200).json(movie);
-  } else {
-    res.status(400).send("movie does not exist");
+app.get(
+  "/director/:name",
+  passport.authenticate("jwt", {
+    session: false,
+  }),
+  async (req, res) => {
+    const name = req.params.name;
+    if (!name) {
+      res.status(404).send();
+      return;
+    }
+    const director = await movieCollection
+      .findOne({ "Director.Name": name })
+      .exec();
+    if (!director) {
+      res.status(404).send();
+      return;
+    }
+    res.json(director);
   }
-});
+);
 
-// Read Movie by Genre Name
-app.get("/movies/:genreName", (req, res) => {
-  const { genreName } = req.params;
-  const genre = movies.find((movie) => movie.genre.name === genreName).genre;
+//new users to register
 
-  if (genre) {
-    res.status(200).json(genre);
-  } else {
-    res.status(400).send("no type of this genre");
+app.post(
+  "/users",
+  passport.authenticate("jwt", {
+    session: false,
+  }),
+  async (req, res) => {
+    const newUser = req.body;
+    if (!newUser) {
+      res.status(400).send();
+      return;
+    }
+    const user = await userCollection.create(newUser);
+    if (!user) {
+      res.status(404).send();
+      return;
+    }
+    res.json(user);
   }
-});
+);
 
-// Read Directors Name
-app.get("/movies/directors/:directorName", (req, res) => {
-  const { directorName } = req.params;
-  const director = movies.find(
-    (movie) => movie.director.name === directorName
-  ).director;
+// Get user by username
 
-  if (director) {
-    res.status(200).json(director);
-  } else {
-    res.status(400).send("no director found");
+app.get(
+  "/user/:username",
+  passport.authenticate("jwt", {
+    session: false,
+  }),
+  async (req, res) => {
+    const username = req.params.username;
+    if (!username) {
+      res.status(404).send();
+      return;
+    }
+    const user = await userCollection.find({ Username: username });
+    if (!user) {
+      res.status(404).send();
+      return;
+    }
+    res.json(user);
   }
-});
+);
 
-// Create add Movie to Fav
+// Allow users to update their user info (username, password, email, date of birth)
+app.put(
+  "/user/:id",
+  passport.authenticate("jwt", {
+    session: false,
+  }),
+  async (req, res) => {
+    const userId = req.params.id;
+    const userData = req.body;
+    const user = await userCollection.findById(userId).exec();
+    if (!user) {
+      res.status(404).send();
+      return;
+    }
 
-app.post("/users/:id/:movieTitle", (req, res) => {
-  const { id, movieTitle } = req.params;
-  let user = users.find((user) => user.id == id);
+    user.Username = userData.username;
+    user.Password = userData.password;
+    user.Email = userData.email;
+    user.Birthday = userData.birthdate;
 
-  if (user) {
-    user.favoriteMovies.push(movieTitle);
-    res
-      .status(200)
-      .send(`${movieTitle} has been added to user ${id}'s favorites`);
-  } else {
-    res.status(400).send("did not add to favorites");
+    await user.save();
+    res.json({ result: "success" });
   }
-});
+);
+// Add a movie to a user's list of favorites
 
-// Add a user
-app.post("/users", (req, res) => {
-  Users.findOne({ Username: req.body.Username })
-    .then((user) => {
-      if (user) {
-        return res.status(400).send(req.body.Username + "already exists");
-      } else {
-        Users.create({
-          Username: req.body.Username,
-          Password: req.body.Password,
-          Email: req.body.Email,
-          Birthday: req.body.Birthday,
-        })
-          .then((user) => {
-            res.status(201).json(user);
-          })
-          .catch((error) => {
-            console.error(error);
-            res.status(500).send("Error: " + error);
-          });
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send("Error: " + error);
-    });
-});
+app.post(
+  "/user/:id/:movietitle",
+  passport.authenticate("jwt", {
+    session: false,
+  }),
+  async (req, res) => {
+    const movieTitle = req.params.movietitle;
+    const userId = req.params.id;
 
-// Delete movie from fav movies
-app.delete("/users/:id/:movieTitle", (req, res) => {
-  const { id, movieTitle } = req.params;
+    const user = await userCollection.findById(userId).exec();
+    if (!user) {
+      res.status(404).send();
+      return;
+    }
 
-  //Checking if user exists
-  let user = users.find((user) => user.id == id);
+    const movie = await movieCollection.findOne({ Title: movieTitle }).exec();
+    if (!movie) {
+      res.status(404).send("Movie title does not exist");
+    }
 
-  if (user) {
-    user.favoriteMovies = user.favoriteMovies.filter(
-      (title) => title !== movieTitle
-    );
-    res
-      .status(200)
-      .send(`${movieTitle} has been removed from users ${id}'s favorites`);
-  } else {
-    res.status(400).send("did not remove");
+    user.FavoriteMovies.push(movie._id);
+    await user.save();
+
+    res.json({ result: "success" });
   }
-});
+);
 
-// Error handling
-app.use((err, req, res, next) => {
-  res.status(500).send("Something broke!");
-});
+// Allow users to remove a movie from their list of favorites
 
-// Listen for requests
+app.delete(
+  "/user/:id/:movieid",
+  passport.authenticate("jwt", {
+    session: false,
+  }),
+  async (req, res) => {
+    const userId = req.params.id;
+    const movieid = req.params.movieid;
+
+    const user = await userCollection.findById(userId).exec();
+    if (!user) {
+      res.status(404).send();
+      return;
+    }
+    const index = user.FavoriteMovies.indexOf(movieid);
+    user.FavoriteMovies.splice(index, 1);
+
+    await user.save();
+    res.json({ result: "success" });
+  }
+);
+
+// Allow existing users to deregister
+app.delete(
+  "/user/:id",
+  passport.authenticate("jwt", {
+    session: false,
+  }),
+  async (req, res) => {
+    const userId = req.params.id;
+    if (!userId) {
+      res.status(404).send();
+      return;
+    }
+    await userCollection.deleteOne({ _id: userId }).exec();
+
+    res.json({ result: "success" });
+  }
+);
+
 app.listen(8080, () => {
   console.log("Your app is listening in port 8080");
 });
