@@ -105,11 +105,37 @@ app.get(
 
 //new users to register
 
-app.post(
-  "/users",
-  passport.authenticate("jwt", {
-    session: false,
-  }),
+app.post("/users", (req, res) => {
+  let handlePassword = Users.hashPassword(req.body.Password);
+  Users.findOne({ Username: req.body.Username })
+    .then((user) => {
+      if (user) {
+        return res.status(400).send((req.body.Username = "already exists"));
+      } else {
+        Users.create({
+          Username: req.body.Username,
+          Password: hashedPassword,
+          Email: req.body.Email,
+          Birthday: req.body.Birthday,
+        })
+          .then((user) => {
+            res.status(201).json(user);
+          })
+          .catch((error) => {
+            console.error(error);
+            res.status(500).send("Error: " + error);
+          });
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send("Error: " + error);
+    });
+});
+
+passport.authenticate("jwt", {
+  session: false,
+}),
   async (req, res) => {
     const newUser = req.body;
     if (!newUser) {
@@ -122,8 +148,7 @@ app.post(
       return;
     }
     res.json(user);
-  }
-);
+  };
 
 // Get user by username
 
