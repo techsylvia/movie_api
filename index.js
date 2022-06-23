@@ -27,8 +27,8 @@ app.get("/users", async (req, res) => {
 //Return a list of ALL movies to the user
 
 app.get("/", (req, res) => {
-  res.status(200).message("hello test").send()
-})
+  res.status(200).message("hello test").send();
+});
 
 app.get(
   "/movies",
@@ -291,6 +291,6 @@ app.delete(
 );
 
 const port = process.env.PORT || 8080;
-app.listen(port, '0.0.0.0', () => {
-  console.log('Listening on Port ' = port);
+app.listen(port, "0.0.0.0", () => {
+  console.log("Listening on Port ", port);
 });
