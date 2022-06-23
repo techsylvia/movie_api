@@ -24,12 +24,6 @@ app.get("/users", async (req, res) => {
   res.json(users);
 });
 
-//Return a list of ALL movies to the user
-
-app.get("/", (req, res) => {
-  res.status(200).message("hello test").send();
-});
-
 app.get(
   "/movies",
   passport.authenticate("jwt", {
