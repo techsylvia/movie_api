@@ -1,11 +1,18 @@
+const mongoose = require("mongoose");
+
 const movieCollection = require("./models").Movie;
 const userCollection = require("./models").User;
 const express = require("express");
 bodyParser = require("body-parser");
 
+
+mongoose.connect(process.env.CONNECTION_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+
 const { check, validationResult } = require("express-validator");
-
-
 
 const app = express();
 app.use(bodyParser.json());
