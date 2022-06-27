@@ -1,9 +1,3 @@
-const mongoose = require("mongoose");
-
-mongoose.connect(process.env.CONNECTION_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
 
 const bcrypt = require("bcrypt");
 

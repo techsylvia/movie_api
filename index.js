@@ -5,6 +5,8 @@ bodyParser = require("body-parser");
 
 const { check, validationResult } = require("express-validator");
 
+
+
 const app = express();
 app.use(bodyParser.json());
 
