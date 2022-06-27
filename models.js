@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 
+=======
+const mongoose = require("mongoose");
+>>>>>>> 0a2aa0a0ff822fb0e435226ef1841dd07a7899c5
 const bcrypt = require("bcrypt");
 
 let movieSchema = mongoose.Schema({
