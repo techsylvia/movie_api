@@ -5,12 +5,10 @@ const userCollection = require("./models").User;
 const express = require("express");
 bodyParser = require("body-parser");
 
-
 mongoose.connect(process.env.CONNECTION_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
 
 const { check, validationResult } = require("express-validator");
 
@@ -32,7 +30,7 @@ app.get("/users", async (req, res) => {
   const users = await userCollection.find();
   res.json(users);
 });
-
+/*
 app.get(
   "/movies",
   passport.authenticate("jwt", {
@@ -42,7 +40,18 @@ app.get(
     const movies = await movieCollection.find();
     res.json(movies);
   }
-);
+);*/
+
+app.get("/movies", function (req, res) {
+  Movies.find()
+    .then(function (movies) {
+      res.status(201).json(movies);
+    })
+    .catch(function (error) {
+      console.error(error);
+      res.status(500).send("Error: " + error);
+    });
+});
 
 //Return data about a genre (description) by name/title
 
