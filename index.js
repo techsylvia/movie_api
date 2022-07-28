@@ -30,17 +30,15 @@ app.get("/users", async (req, res) => {
   const users = await userCollection.find();
   res.json(users);
 });
-/*
+
 app.get(
   "/movies",
-  passport.authenticate("jwt", {
-    session: false,
-  }),
+  passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     const movies = await movieCollection.find();
     res.json(movies);
   }
-);*/
+);
 
 app.get("/movies", function (req, res) {
   Movies.find()
