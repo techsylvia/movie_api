@@ -181,7 +181,7 @@ app.get(
       res.status(404).send();
       return;
     }
-    const user = await userCollection.find({ Username: username });
+    const user = await userCollection.findOne({ Username: username });
     if (!user) {
       res.status(404).send();
       return;
@@ -192,14 +192,14 @@ app.get(
 
 // Allow users to update their user info (username, password, email, date of birth)
 app.put(
-  "/user/:id",
+  "/user/:username",
   passport.authenticate("jwt", {
     session: false,
   }),
   async (req, res) => {
-    const userId = req.params.id;
+    const userName = req.params.username;
     const userData = req.body;
-    const user = await userCollection.findById(userId).exec();
+    const user = await userCollection.findOne({ Username: userName });
     if (!user) {
       res.status(404).send();
       return;
@@ -219,15 +219,15 @@ app.put(
 // Add a movie to a user's list of favorites
 
 app.post(
-  "/user/:id/:movietitle",
+  "/user/:username/:movietitle",
   passport.authenticate("jwt", {
     session: false,
   }),
   async (req, res) => {
     const movieTitle = req.params.movietitle;
-    const userId = req.params.id;
+    const username = req.params.username;
 
-    const user = await userCollection.findById(userId).exec();
+    const user = await userCollection.findOne({ Username: username });
     if (!user) {
       res.status(404).send();
       return;
@@ -248,15 +248,15 @@ app.post(
 // Allow users to remove a movie from their list of favorites
 
 app.delete(
-  "/user/:id/:movieid",
+  "/user/:username/:movieid",
   passport.authenticate("jwt", {
     session: false,
   }),
   async (req, res) => {
-    const userId = req.params.id;
+    const username = req.params.username;
     const movieid = req.params.movieid;
 
-    const user = await userCollection.findById(userId).exec();
+    const user = await userCollection.findOne({ Username: username });
     if (!user) {
       res.status(404).send();
       return;
@@ -271,17 +271,17 @@ app.delete(
 
 // Allow existing users to deregister
 app.delete(
-  "/user/:id",
+  "/user/:username",
   passport.authenticate("jwt", {
     session: false,
   }),
   async (req, res) => {
-    const userId = req.params.id;
-    if (!userId) {
+    const username = req.params.username;
+    if (!username) {
       res.status(404).send();
       return;
     }
-    await userCollection.deleteOne({ _id: userId }).exec();
+    await userCollection.deleteOne({ Username: username }).exec();
 
     res.json({ result: "success" });
   }
