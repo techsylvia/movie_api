@@ -10,17 +10,19 @@ Be able to receive information on movies, directors, and genres. <br>
 
 ## Technical Requirements
 
-### API must: <br>
-📌 Be a Node.js and Express application &  must use REST architecture, with URL endpoints corresponding to the data
-operations listed above. <br>
-📌 Use at least three middleware modules, such as the body-parser package for
-reading data from requests and morgan for logging & use a “package.json” file. <br>
-📌 Be tested in Postman & include user authentication and authorization. <br>
-📌 Include data validation logic & meet data security regulations. <br>
+### API must:🔺 <br>
+      Be a Node.js and Express application &  must use REST architecture, with URL endpoints corresponding to the data
+      operations listed above. 
+      
+      Use at least three middleware modules, such as the body-parser package for
+      reading data from requests and morgan for logging & use a “package.json” file.
+      
+      Be tested in Postman & include user authentication and authorization.
+      
+      Include data validation logic & meet data security regulations. 
 
 
-✨ The database must be built using MongoDB & business logic must be modeled with Mongoose. <br>
+✨ The database must be built using [MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white) & business logic must be modeled with Mongoose. <br>
 
-✨ The API source code must be deployed to a publicly accessible platform like GitHub. <br>
 
-✨ The API must be deployed to Heroku. <br>
+✨ The API must be deployed to [Heroku](https://img.shields.io/badge/Heroku-430098?style=for-the-badge&logo=heroku&logoColor=white). <br>
